@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "SlotEB-StinkinRich.sln"
+    "dotnet.defaultSolution": "SlotSpecial-StinkinRich-MP.sln"
 }

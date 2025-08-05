@@ -211,7 +211,7 @@ public class UIManager : MonoBehaviour
     internal int FreeSpins = 0;
 
     internal bool FSPopUpActive;
-        private Tween WinPopupTextTween;
+    private Tween WinPopupTextTween;
     private Tween ClosePopupTween;
 
     [SerializeField] private Button SkipWinAnimation;
@@ -326,8 +326,8 @@ public class UIManager : MonoBehaviour
         if (Music_Button) Music_Button.onClick.RemoveAllListeners();
         if (Music_Button) Music_Button.onClick.AddListener(ToggleMusic);
 
-                if(SkipWinAnimation) SkipWinAnimation.onClick.RemoveAllListeners();
-        if(SkipWinAnimation) SkipWinAnimation.onClick.AddListener(SkipWin);
+        if (SkipWinAnimation) SkipWinAnimation.onClick.RemoveAllListeners();
+        if (SkipWinAnimation) SkipWinAnimation.onClick.AddListener(SkipWin);
 
 
     }
@@ -369,11 +369,28 @@ public class UIManager : MonoBehaviour
         OpenPopup(LBPopup_Object);
     }
 
-    internal void DisconnectionPopup(bool isReconnection)
+    internal void DisconnectionPopup()
     {
         if (!isExit)
         {
             OpenPopup(DisconnectPopup_Object);
+        }
+    }
+
+    internal void ReconnectionPopup()
+    {
+        OpenPopup(ReconnectPopup_Object);
+    }
+
+    internal void CheckAndClosePopups()
+    {
+        if (ReconnectPopup_Object.activeInHierarchy)
+        {
+            ClosePopup(ReconnectPopup_Object);
+        }
+        if (DisconnectPopup_Object.activeInHierarchy)
+        {
+            ClosePopup(DisconnectPopup_Object);
         }
     }
 
@@ -421,15 +438,18 @@ public class UIManager : MonoBehaviour
         if (BonusWinKTR_Text) BonusWinKTR_Text.text = CurrentWin.ToString();
     }
 
-     void SkipWin(){
+    void SkipWin()
+    {
         Debug.Log("Skip win called");
-        if(ClosePopupTween!=null){
+        if (ClosePopupTween != null)
+        {
             ClosePopupTween.Kill();
-            ClosePopupTween=null;
+            ClosePopupTween = null;
         }
-        if(WinPopupTextTween!=null){
+        if (WinPopupTextTween != null)
+        {
             WinPopupTextTween.Kill();
-            WinPopupTextTween=null;
+            WinPopupTextTween = null;
         }
         ClosePopup(WinPopup_Object);
         slotManager.CheckPopups = false;
@@ -437,17 +457,18 @@ public class UIManager : MonoBehaviour
 
     internal void FreeSpinProcessStop()
     {
+        Debug.Log($"#$############# free sppin process stop called");
         FSPopUpActive = true;
         if (FSComplete_Image) FSComplete_Image.color = new Color(FSComplete_Image.color.r, FSComplete_Image.color.g, FSComplete_Image.color.b, 0f);
         if (FSComplete_Text) FSComplete_Text.color = new Color(FSComplete_Text.color.r, FSComplete_Text.color.g, FSComplete_Text.color.b, 0f);
         if (FSNum_Text) FSNum_Text.color = new Color(FSNum_Text.color.r, FSNum_Text.color.g, FSNum_Text.color.b, 0f);
-        if (FSNum_Text) FSNum_Text.text = BonusWinKTR_Text.text;
+        if (FSNum_Text) FSNum_Text.text = BonusWin.ToString("f3");  //BonusWinKTR_Text.text;
         if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(true);
         if (MainPopup_Object) MainPopup_Object.SetActive(true);
         if (FSComplete_Image) FSComplete_Image.DOFade(1f, 1f);
         if (FSComplete_Text) FSComplete_Text.DOFade(1f, 1f);
         if (FSNum_Text) FSNum_Text.DOFade(1f, 1f);
-        DOVirtual.DelayedCall(4f, () =>
+        DOVirtual.DelayedCall(2.5f, () =>
         {
             if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(false);
             if (MainPopup_Object) MainPopup_Object.SetActive(false);
@@ -455,7 +476,7 @@ public class UIManager : MonoBehaviour
 
             if (audioController) audioController.SwitchBGSound(false);
             FSPopUpActive = false;
-            BonusWin=0;
+            BonusWin = 0;
 
         });
     }
@@ -481,10 +502,10 @@ public class UIManager : MonoBehaviour
         {
             time = 5f;
         }
-        if(!isBegin)
-         FS_Text.text = $"You have been awarded with extra <size=100><color=green>{freeSpins}</color></size> free spins.";
+        if (!isBegin)
+            FS_Text.text = $"You have been awarded with extra <size=100><color=green>{freeSpins}</color></size> free spins.";
         else
-        FS_Text.text = $"You have been awarded with <size=100><color=green>{freeSpins}</color></size> free spins.";
+            FS_Text.text = $"You have been awarded with <size=100><color=green>{freeSpins}</color></size> free spins.";
 
         if (FS_Image) FS_Image.color = FS_Image.color = new Color(FS_Image.color.r, FS_Image.color.g, FS_Image.color.b, 1f);
         if (FSTitle_Image) FSTitle_Image.color = FSTitle_Image.color = new Color(FSTitle_Image.color.r, FSTitle_Image.color.g, FSTitle_Image.color.b, 1f);
@@ -499,8 +520,9 @@ public class UIManager : MonoBehaviour
                 if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
             });
             if (FSTitle_Image) FSTitle_Image.DOFade(0f, 1f);
-            if (FS_Text) FS_Text.DOFade(0f, 1f).OnComplete(()=>{
-            FSPopUpActive = false;
+            if (FS_Text) FS_Text.DOFade(0f, 1f).OnComplete(() =>
+            {
+                FSPopUpActive = false;
             });
 
             // slotManager.FreeSpin(freeSpins);
@@ -560,7 +582,7 @@ public class UIManager : MonoBehaviour
             if (Win_Text) Win_Text.text = initAmount.ToString("f3");
         });
 
-        ClosePopupTween=DOVirtual.DelayedCall(6f, () =>
+        ClosePopupTween = DOVirtual.DelayedCall(6f, () =>
         {
             ClosePopup(WinPopup_Object);
             slotManager.CheckPopups = false;
@@ -582,17 +604,17 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < SymbolsText.Length; i++)
         {
             string text = null;
-            if (paylines.symbols[i].Multiplier[0][0] != 0)
+            if (paylines.symbols[i].multiplier[0] != 0)
             {
-                text += "5x = " + paylines.symbols[i].Multiplier[0][0];
+                text += "5x = " + paylines.symbols[i].multiplier[0];
             }
-            if (paylines.symbols[i].Multiplier[1][0] != 0)
+            if (paylines.symbols[i].multiplier[1] != 0)
             {
-                text += "\n4x = " + paylines.symbols[i].Multiplier[1][0];
+                text += "\n4x = " + paylines.symbols[i].multiplier[1];
             }
-            if (paylines.symbols[i].Multiplier[2][0] != 0)
+            if (paylines.symbols[i].multiplier[2] != 0)
             {
-                text += "\n3x = " + paylines.symbols[i].Multiplier[2][0];
+                text += "\n3x = " + paylines.symbols[i].multiplier[2];
             }
             if (SymbolsText[i]) SymbolsText[i].text = text;
             if (KTRSymbolsText[i]) KTRSymbolsText[i].text = text;
@@ -600,19 +622,19 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < paylines.symbols.Count; i++)
         {
-            if (paylines.symbols[i].Name.ToUpper() == "FREESPIN")
+            if (paylines.symbols[i].name.ToUpper() == "FREESPIN")
             {
                 if (KTR_Text) KTR_Text.text = paylines.symbols[i].description.ToString();
             }
-            if (paylines.symbols[i].Name.ToUpper() == "SCATTER")
+            if (paylines.symbols[i].name.ToUpper() == "SCATTER")
             {
                 if (Scatter_Text) Scatter_Text.text = paylines.symbols[i].description.ToString();
             }
-            if (paylines.symbols[i].Name.ToUpper() == "BONUS")
+            if (paylines.symbols[i].name.ToUpper() == "BONUS")
             {
                 if (TFC_Text) TFC_Text.text = paylines.symbols[i].description.ToString();
             }
-            if (paylines.symbols[i].Name.ToUpper() == "WILD")
+            if (paylines.symbols[i].name.ToUpper() == "WILD")
             {
                 if (Wild_Text) Wild_Text.text = paylines.symbols[i].description.ToString();
             }
