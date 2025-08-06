@@ -87,6 +87,8 @@ public class UIManager : MonoBehaviour
     private Image FS_Image;
     [SerializeField]
     private Image FSTitle_Image;
+    internal bool isFreeSpinPopupActive = false;
+    [SerializeField] private Button SkipFreeSpinStart_Button;
 
     [Header("Free Spin Complete Popup")]
     [SerializeField]
@@ -97,6 +99,7 @@ public class UIManager : MonoBehaviour
     private TMP_Text FSNum_Text;
     [SerializeField]
     private Image FSComplete_Image;
+    [SerializeField] private Button SkipFreeSpinComplete_Button;
 
     [Header("Splash Screen")]
     [SerializeField]
@@ -316,6 +319,11 @@ public class UIManager : MonoBehaviour
         if (QuitSplash_button) QuitSplash_button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
         if (audioController) audioController.ToggleMute(false);
+        SkipFreeSpinComplete_Button.onClick.RemoveAllListeners();
+        if (SkipFreeSpinComplete_Button) SkipFreeSpinComplete_Button.onClick.AddListener(skipFreeSpinPopup);
+
+        SkipFreeSpinStart_Button.onClick.RemoveAllListeners();
+        if (SkipFreeSpinStart_Button) SkipFreeSpinStart_Button.onClick.AddListener(skipFreeSpinPopup);
 
         isMusic = true;
         isSound = true;
@@ -426,9 +434,14 @@ public class UIManager : MonoBehaviour
             if (BonusWinKTR_Text) BonusWinKTR_Text.text = "0.00";
         }
         if (FreeSpinKTR_Text) FreeSpinKTR_Text.text = spins.ToString();
-        ShowPopupProcess(ExtraSpins, isUpdate);
+        StartCoroutine(ShowPopupProcess(ExtraSpins, isUpdate));
 
 
+    }
+
+    private void skipFreeSpinPopup()
+    {
+        isFreeSpinPopupActive = false;
     }
 
     internal void UpdateUI(int freeSpins, double CurrentWin)
@@ -455,9 +468,10 @@ public class UIManager : MonoBehaviour
         slotManager.CheckPopups = false;
     }
 
-    internal void FreeSpinProcessStop()
+    internal IEnumerator FreeSpinProcessStop()
     {
         Debug.Log($"#$############# free sppin process stop called");
+        isFreeSpinPopupActive = true;
         FSPopUpActive = true;
         if (FSComplete_Image) FSComplete_Image.color = new Color(FSComplete_Image.color.r, FSComplete_Image.color.g, FSComplete_Image.color.b, 0f);
         if (FSComplete_Text) FSComplete_Text.color = new Color(FSComplete_Text.color.r, FSComplete_Text.color.g, FSComplete_Text.color.b, 0f);
@@ -470,15 +484,22 @@ public class UIManager : MonoBehaviour
         if (FSNum_Text) FSNum_Text.DOFade(1f, 1f);
         DOVirtual.DelayedCall(2.5f, () =>
         {
-            if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(false);
-            if (MainPopup_Object) MainPopup_Object.SetActive(false);
-            ToggleKTR(false);
-
-            if (audioController) audioController.SwitchBGSound(false);
-            FSPopUpActive = false;
-            BonusWin = 0;
-
+        isFreeSpinPopupActive = false;
         });
+
+
+        // DOVirtual.DelayedCall(2.5f, () =>
+        // {
+        yield return new WaitUntil(() => !isFreeSpinPopupActive);
+        if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(false);
+        if (MainPopup_Object) MainPopup_Object.SetActive(false);
+        ToggleKTR(false);
+
+        if (audioController) audioController.SwitchBGSound(false);
+        FSPopUpActive = false;
+        BonusWin = 0;
+
+        // });
     }
 
     internal void ToggleBonusRText(bool isActive)
@@ -495,9 +516,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void ShowPopupProcess(int freeSpins, bool isBegin)
+    private IEnumerator ShowPopupProcess(int freeSpins, bool isBegin)
     {
         float time = 3f;
+        isFreeSpinPopupActive = true;
         if (isBegin)
         {
             time = 5f;
@@ -514,20 +536,25 @@ public class UIManager : MonoBehaviour
         if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(true);
         DOVirtual.DelayedCall(time, () =>
         {
-            if (FS_Image) FS_Image.DOFade(0f, 1f).OnComplete(delegate
-            {
-                if (MainPopup_Object) MainPopup_Object.SetActive(false);
-                if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
-            });
-            if (FSTitle_Image) FSTitle_Image.DOFade(0f, 1f);
-            if (FS_Text) FS_Text.DOFade(0f, 1f).OnComplete(() =>
-            {
-                FSPopUpActive = false;
-            });
-
-            // slotManager.FreeSpin(freeSpins);
-
+            isFreeSpinPopupActive = false;
         });
+        yield return new WaitUntil(() => !isFreeSpinPopupActive);
+        // DOVirtual.DelayedCall(time, () =>
+        // {
+        if (FS_Image) FS_Image.DOFade(0f, 1f).OnComplete(delegate
+        {
+            if (MainPopup_Object) MainPopup_Object.SetActive(false);
+            if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
+        });
+        if (FSTitle_Image) FSTitle_Image.DOFade(0f, 1f);
+        if (FS_Text) FS_Text.DOFade(0f, 1f).OnComplete(() =>
+        {
+            FSPopUpActive = false;
+        });
+
+        // slotManager.FreeSpin(freeSpins);
+
+        // });
     }
 
     private void ToggleKTR(bool isActive)

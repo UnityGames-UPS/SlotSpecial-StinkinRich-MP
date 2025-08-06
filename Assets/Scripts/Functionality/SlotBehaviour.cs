@@ -340,12 +340,14 @@ public class SlotBehaviour : MonoBehaviour
             i++;
         }
         if (!AutoSpinStop_Button.interactable) AutoSpinStop_Button.interactable = true;
-        uiManager.FreeSpinProcessStop();
+       StartCoroutine(uiManager.FreeSpinProcessStop());
         Debug.Log($"#$############# free sppin process stop called freespincoroutine");
 
         FreeSpinCounter = 0;
         uiManager.FreeSpins = 0;
-        yield return new WaitForSeconds(5f);
+        // yield return new WaitForSeconds(5f);
+       yield return new WaitUntil(() => !uiManager.isFreeSpinPopupActive);
+       yield return new WaitForSeconds(2.5f);
         if (WasAutoSpinOn)
         {
             AutoSpin();
@@ -382,8 +384,8 @@ public class SlotBehaviour : MonoBehaviour
         if (audioController) audioController.PlayButtonAudio();
         BetCounter = SocketManager.initialData.bets.Count - 1;
         if (LineBet_text) LineBet_text.text = SocketManager.initialData.bets[BetCounter].ToString();
-        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * Lines).ToString();
-        currentTotalBet = SocketManager.initialData.bets[BetCounter] * Lines;
+        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count).ToString();
+        currentTotalBet = SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count;
         CompareBalance();
     }
 
@@ -413,8 +415,8 @@ public class SlotBehaviour : MonoBehaviour
             }
         }
         if (LineBet_text) LineBet_text.text = SocketManager.initialData.bets[BetCounter].ToString();
-        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * Lines).ToString();
-        currentTotalBet = SocketManager.initialData.bets[BetCounter] * Lines;
+        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count).ToString();
+        currentTotalBet = SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count;
         // CompareBalance();
     }
 
@@ -444,8 +446,8 @@ public class SlotBehaviour : MonoBehaviour
             }
         }
         if (LineBet_text) LineBet_text.text = SocketManager.initialData.bets[BetCounter].ToString();
-        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * Lines).ToString("f2");
-        currentTotalBet = SocketManager.initialData.bets[BetCounter] * Lines;
+        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count).ToString("f2");
+        currentTotalBet = SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count;
         // CompareBalance();
     }
 
@@ -478,11 +480,11 @@ public class SlotBehaviour : MonoBehaviour
     {
         BetCounter = 0;
         if (LineBet_text) LineBet_text.text = SocketManager.initialData.bets[BetCounter].ToString();
-        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * Lines).ToString();
+        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count).ToString();
         if (TotalWin_text) TotalWin_text.text = "0.000";
         if (Balance_text) Balance_text.text = SocketManager.playerdata.balance.ToString("f3");
         currentBalance = SocketManager.playerdata.balance;
-        currentTotalBet = SocketManager.initialData.bets[BetCounter] * Lines;
+        currentTotalBet = SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count;
         CompareBalance();
         uiManager.InitialiseUIData(SocketManager.initUIData.paylines);
     }
@@ -784,6 +786,13 @@ public class SlotBehaviour : MonoBehaviour
                     if (KTRimages[j].slotImages[i]) KTRimages[j].slotImages[i].sprite = KTRImages[resultNum];
                     if (Animimages[j].slotImages[i]) Animimages[j].slotImages[i].sprite = KTRImages[resultNum];
                     PopulateAnimationSpritesKTR(Animimages[j].slotImages[i].gameObject.GetComponent<ImageAnimation>(), resultNum);
+
+
+
+                    Tempimages[j].slotImages[i].sprite = myImages[resultNum];
+                    if (images[j].slotImages[i]) images[j].slotImages[i].sprite = myImages[resultNum];
+                    if (Animimages[j].slotImages[i]) Animimages[j].slotImages[i].sprite = myImages[resultNum];
+                    PopulateAnimationSprites(Tempimages[j].slotImages[i].GetComponent<ImageAnimation>(), resultNum);
                 }
             }
         }
