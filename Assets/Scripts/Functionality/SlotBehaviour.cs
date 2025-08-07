@@ -879,8 +879,8 @@ public class SlotBehaviour : MonoBehaviour
         {
             CheckWinPopups();
         }
-        if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.features.totalWinAmount.ToString("f3");
         yield return new WaitUntil(() => !CheckPopups);
+        if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.features.totalWinAmount.ToString("f3");
 
         if (IsFreeSpin)
         {
