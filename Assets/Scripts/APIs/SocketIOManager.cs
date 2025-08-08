@@ -609,8 +609,8 @@ public class GameData
 public class BonusData
 {
   public bool isBonus { get; set; }
-  public int bonusWin { get; set; }
-  public List<int> shuffledBonusValues { get; set; }
+  public double bonusWin { get; set; }
+  public List<double> shuffledBonusValues { get; set; }
   public int selectedBonusMultiplier { get; set; }
   public List<string> trashForCashWinningSymbols { get; set; }
 }
@@ -675,16 +675,16 @@ public class Scatter
 public class Bonus
 {
   public bool enabled { get; set; }
-  public int amount { get; set; }
+  public double amount { get; set; }
   public int bonusCount { get; set; }
   public SelectedBonus selectedBonus { get; set; }
-  public List<int> creditBonus { get; set; }
+  public List<double> creditBonus { get; set; }
 }
 [Serializable]
 public class SelectedBonus
 {
   public int multiplier { get; set; }
-  public int credit { get; set; }
+  public double credit { get; set; }
 }
 
 [Serializable]

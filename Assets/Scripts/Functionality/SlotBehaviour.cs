@@ -832,6 +832,7 @@ public class SlotBehaviour : MonoBehaviour
 
         }
         StopSpinToggle = false;
+        audioController.StopWLAaudio();
         yield return alltweens[^1].WaitForCompletion();
         KillAllTweens();
         if (SocketManager.ResultData.payload.winAmount > 0)

@@ -49,8 +49,8 @@ public class BonusController : MonoBehaviour
     [SerializeField]
     private AudioController audioController;
 
-    private int totalWin = 0;
-    private int Win = 0;
+    private double totalWin = 0;
+    private double Win = 0;
     private List<TrashCashFunctionality> tempList = new List<TrashCashFunctionality>();
     private BonusData savedData;
  //   internal List< List<int>> Bonusindexes= new List<List<int>>();
@@ -111,11 +111,13 @@ public class BonusController : MonoBehaviour
         return savedData.selectedBonusMultiplier;
     }
 
-    internal int GetTrashValue()
+    internal double GetTrashValue()
     {
         if (audioController) audioController.PlayBonusAudio("trash");
         if (RayCast_Panel) RayCast_Panel.SetActive(true);
-        return savedData.shuffledBonusValues[savedData.shuffledBonusValues.Count - 1];
+        //   return savedData.shuffledBonusValues[savedData.shuffledBonusValues.Count - 1];
+     return SocketManager.ResultData.features.bonus.selectedBonus.credit;
+        // return savedData.shuffledBonusValues[savedData.shuffledBonusValues.Count - 1];
     }
 
     internal void ClickedTrash()

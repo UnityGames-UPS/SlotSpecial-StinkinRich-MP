@@ -43,7 +43,7 @@ public class TrashCashFunctionality : MonoBehaviour
         if (trashClose_Object) trashClose_Object.SetActive(true);
     }
 
-    internal void OpenTrash(bool isClicked,int value = 0)
+    internal void OpenTrash(bool isClicked,double value = 0)
     {
         if (trashOpen_Object) trashOpen_Object.SetActive(true);
         if (trashClose_Object) trashClose_Object.SetActive(false);
