@@ -340,14 +340,14 @@ public class SlotBehaviour : MonoBehaviour
             i++;
         }
         if (!AutoSpinStop_Button.interactable) AutoSpinStop_Button.interactable = true;
-       StartCoroutine(uiManager.FreeSpinProcessStop());
+        StartCoroutine(uiManager.FreeSpinProcessStop());
         Debug.Log($"#$############# free sppin process stop called freespincoroutine");
 
         FreeSpinCounter = 0;
         uiManager.FreeSpins = 0;
         // yield return new WaitForSeconds(5f);
-       yield return new WaitUntil(() => !uiManager.isFreeSpinPopupActive);
-       yield return new WaitForSeconds(2.5f);
+        yield return new WaitUntil(() => !uiManager.isFreeSpinPopupActive);
+        yield return new WaitForSeconds(2.5f);
         if (WasAutoSpinOn)
         {
             AutoSpin();
@@ -418,7 +418,7 @@ public class SlotBehaviour : MonoBehaviour
         if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count).ToString();
         currentTotalBet = SocketManager.initialData.bets[BetCounter] * SocketManager.initialData.lines.Count;
 
-       
+
         // CompareBalance();
     }
 
@@ -868,12 +868,12 @@ public class SlotBehaviour : MonoBehaviour
         if (Balance_text && !SocketManager.ResultData.features.bonus.enabled) Balance_text.text = SocketManager.ResultData.player.balance.ToString("f3");
 
         currentBalance = SocketManager.ResultData.player.balance;
-        if (SocketManager.ResultData.features.scatter.enabled)
-        {
-            CheckPopups = true;
-            CheckWinPopups(true);
-        }
-        yield return new WaitUntil(() => !CheckPopups);
+        // if (SocketManager.ResultData.features.scatter.enabled)
+        // {
+        //     CheckPopups = true;
+        //     CheckWinPopups(true);
+        // }
+        // yield return new WaitUntil(() => !CheckPopups);
         CheckPopups = true;
         if (SocketManager.ResultData.features.bonus.enabled)
         {
@@ -1025,17 +1025,17 @@ public class SlotBehaviour : MonoBehaviour
         });
     }
 
-    internal void CheckWinPopups(bool isScatter = false)
+    internal void CheckWinPopups()
     {
-        if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.payload.winAmount.ToString("f3");
-        double winAmount = SocketManager.ResultData.payload.winAmount;
-        if (isScatter)
-        {
-            winAmount = SocketManager.ResultData.features.scatter.amount;
-            uiManager.PopulateWin(3, winAmount);
-        }
-        else
-        {
+        if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.features.totalWinAmount.ToString("f3");
+        double winAmount = SocketManager.ResultData.features.totalWinAmount;
+        // if (isScatter)
+        // {
+        //     double ScatterwinAmount = SocketManager.ResultData.features.scatter.amount;
+        //     uiManager.PopulateWin(3, ScatterwinAmount);
+        // }
+        // else
+        // {
             // = currentTotalBet * 10 && SocketManager.resultData.WinAmout < currentTotalBet * 15
             if (winAmount >= currentTotalBet * 5 && winAmount < currentTotalBet * 10)
             {
@@ -1053,7 +1053,7 @@ public class SlotBehaviour : MonoBehaviour
             {
                 CheckPopups = false;
             }
-        }
+       // }
     }
 
     internal void CheckBonusGame()
