@@ -448,7 +448,7 @@ public class UIManager : MonoBehaviour
     {
         BonusWin += CurrentWin;
         if (FreeSpinKTR_Text) FreeSpinKTR_Text.text = freeSpins.ToString();
-        if (BonusWinKTR_Text) BonusWinKTR_Text.text = CurrentWin.ToString();
+        if (BonusWinKTR_Text) BonusWinKTR_Text.text = CurrentWin.ToString("f3");
     }
 
     void SkipWin()

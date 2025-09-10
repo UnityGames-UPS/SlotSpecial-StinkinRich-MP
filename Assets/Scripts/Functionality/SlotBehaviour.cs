@@ -734,7 +734,7 @@ public class SlotBehaviour : MonoBehaviour
         {
             FreeSpinCounter--;
             uiManager.FreeSpins--;
-            uiManager.UpdateUI(FreeSpinCounter, 0);
+            uiManager.UpdateUI(FreeSpinCounter, 0.000);
         }
         if (uiManager) uiManager.ToggleSquirrel(true);
         if (audioController) audioController.PlayWLAudio("spin");
@@ -835,7 +835,7 @@ public class SlotBehaviour : MonoBehaviour
         audioController.StopWLAaudio();
         yield return alltweens[^1].WaitForCompletion();
         KillAllTweens();
-        if (SocketManager.ResultData.payload.winAmount > 0)
+        if (SocketManager.ResultData.features.totalWinAmount > 0)
         {
             SpinDelay = 1.2f;
         }
@@ -846,7 +846,7 @@ public class SlotBehaviour : MonoBehaviour
 
         if (SocketManager.ResultData.payload.winAmount > 0)
         {
-            if (TotalWin_text) TotalWin_text.text = GetTotalWinAmount(0).ToString("f3");
+            if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.features.totalWinAmount.ToString("f3");
             List<int> winLine = new();
             foreach (var item in SocketManager.ResultData.payload.wins)
             {
@@ -863,7 +863,7 @@ public class SlotBehaviour : MonoBehaviour
 
 
         //comment 1
-        if (TotalWin_text) TotalWin_text.text = GetTotalWinAmount(0).ToString("f3");
+        if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.features.totalWinAmount.ToString("f3");
         BalanceTween?.Kill();
         if (Balance_text && !SocketManager.ResultData.features.bonus.enabled) Balance_text.text = SocketManager.ResultData.player.balance.ToString("f3");
 
