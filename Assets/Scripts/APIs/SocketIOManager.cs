@@ -63,6 +63,15 @@ public class SocketIOManager : MonoBehaviour
   private const int MaxMissedPongs = 5;
   private Coroutine PingRoutine; //Back2 end
   [SerializeField] private GameObject RaycastBlocker;
+  internal int[,] Winmatrix = new int[5, 5]
+   {
+        { 8, 9, 10, 8, 6 },
+        { 6, 9, 9, 9, 8 },
+        { 7, 9, 12, 12, 12 },
+        { 6, 9, 9, 9, 6 },
+        { 7, 9, 10, 9, 7 }
+   };
+
 
   private void Awake()
   {

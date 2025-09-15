@@ -465,6 +465,36 @@ public class SlotBehaviour : MonoBehaviour
                 Tempimages[i].slotImages[j].sprite = myImages[randomIndex];
             }
         }
+
+        // SetWinningMatrix();
+        // PlaywinningMatrixAnim();
+    }
+
+    internal void SetWinningMatrix()
+    {
+        for (int row = 0; row < 5; row++)
+        {
+            for (int col = 0; col < 5; col++)
+            {
+                int value = SocketManager.Winmatrix[row, col];
+                Tempimages[col].slotImages[row].sprite = myImages[value];
+                PopulateAnimationSprites(Tempimages[col].slotImages[row].GetComponent<ImageAnimation>(), value);
+
+            }
+        }
+    }
+
+    internal void PlaywinningMatrixAnim()
+    {
+        for (int row = 0; row < 5; row++)
+        {
+            for (int col = 0; col < 5; col++)
+            {
+                int value = SocketManager.Winmatrix[row, col];
+                StartGameAnimation(Tempimages[col].slotImages[row].gameObject);
+
+            }
+        }
     }
 
     private void shuffleInitialMatrixKTR()
@@ -1036,24 +1066,24 @@ public class SlotBehaviour : MonoBehaviour
         // }
         // else
         // {
-            // = currentTotalBet * 10 && SocketManager.resultData.WinAmout < currentTotalBet * 15
-            if (winAmount >= currentTotalBet * 5 && winAmount < currentTotalBet * 10)
-            {
-                uiManager.PopulateWin(1, winAmount);
-            }
-            else if (winAmount >= currentTotalBet * 10 && winAmount < currentTotalBet * 15)
-            {
-                uiManager.PopulateWin(2, winAmount);
-            }
-            else if (winAmount >= currentTotalBet * 15)
-            {
-                uiManager.PopulateWin(3, winAmount);
-            }
-            else
-            {
-                CheckPopups = false;
-            }
-       // }
+        // = currentTotalBet * 10 && SocketManager.resultData.WinAmout < currentTotalBet * 15
+        if (winAmount >= currentTotalBet * 5 && winAmount < currentTotalBet * 10)
+        {
+            uiManager.PopulateWin(1, winAmount);
+        }
+        else if (winAmount >= currentTotalBet * 10 && winAmount < currentTotalBet * 15)
+        {
+            uiManager.PopulateWin(2, winAmount);
+        }
+        else if (winAmount >= currentTotalBet * 15)
+        {
+            uiManager.PopulateWin(3, winAmount);
+        }
+        else
+        {
+            CheckPopups = false;
+        }
+        // }
     }
 
     internal void CheckBonusGame()
