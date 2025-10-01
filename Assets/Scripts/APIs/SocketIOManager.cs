@@ -237,8 +237,9 @@ public class SocketIOManager : MonoBehaviour
   private void OnError(Error err)
   {
     Debug.LogError("Error: " + err);
-#if Unity_WEBGL && !UNITY_EDITOR
-        JSManager.SendCustomMessage("error");
+#if UNITY_WEBGL && !UNITY_EDITOR
+    Debug.Log("Called Send Custom Message");
+    JSManager.SendCustomMessage("error");
 #endif
   }
   void CloseGame()

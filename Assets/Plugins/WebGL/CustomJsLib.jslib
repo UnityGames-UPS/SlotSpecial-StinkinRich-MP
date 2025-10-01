@@ -32,7 +32,7 @@ mergeInto(LibraryManager.library, {
       }
       else if(window.parent){
         if(window.parent.dispatchReactUnityEvent){
-          console.log("Inside window parent");
+          console.log("Sending message" + message);
           window.parent.dispatchReactUnityEvent(message); 
         }
       }
